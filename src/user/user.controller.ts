@@ -1,27 +1,35 @@
-import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Body, Param, NotFoundException } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/create-user.dto';
+import { User } from './user.entity';
 
 @Controller('users')
 export class UserController {
-  authService: any;
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
+  @Post('register')
+  async registerUser(@Body() registerDto: RegisterDto): Promise<User> {
+    return this.userService.registerUser(registerDto);
   }
 
-  @Post('login')
-  async loginUser(@Body() loginDto: LoginDto) {
-    const user = await this.userService.findByUsername(loginDto.username);
-
-    if (user && user.password === loginDto.password) {
-      const token = await this.authService.generateToken(user.id);
-      return { token };
-    }
-
-    throw new UnauthorizedException('Invalid credentials');
+  @Get()
+  async getAllUsers(): Promise<User[]> {
+    return this.userService.getAllUsers();
   }
-}
+
+  @Get(':id')
+  async getUserById(@Param('id') id: number): Promise<User> {
+    return this.userService.getUserById(id);
+  }
+
+  @Patch(':id')
+  async updateUser(@Param('id') id: number, @Body() updateUserDto: RegisterDto): Promise<User> {
+    return this.userService.updateUser(id, updateUserDto);
+  }
+
+  @Delete(':id')
+  async deleteUser(@Param('id') id: number): Promise<{ message: string }> {
+    await this.userService.deleteUser(id);
+    return { message: 'User deleted successfully' };
+  }
+  }

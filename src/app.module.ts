@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { BookModule } from './book/book.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -16,7 +16,7 @@ import { BookModule } from './book/book.module';
     database: 'mega_bib',
     entities: [__dirname + '/**/*.entity{.ts,.js}'], // Ruta de las entidades
     synchronize: true,
-  }),AuthModule, UserModule, BookModule],
+  }), UserModule, BookModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
