@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
+import { BookModule } from './book/book.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -15,7 +16,7 @@ import { UserModule } from './user/user.module';
     database: 'mega_bib',
     entities: [__dirname + '/**/*.entity{.ts,.js}'], // Ruta de las entidades
     synchronize: true,
-  }),AuthModule, UserModule],
+  }),AuthModule, UserModule, BookModule],
   controllers: [AppController],
   providers: [AppService],
 })
