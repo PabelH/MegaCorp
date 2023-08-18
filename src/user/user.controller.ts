@@ -17,14 +17,14 @@ export class UserController {
     return this.userService.getAllUsers();
   }
 
-  @Get('search/:email')
-  async findByEmail(@Param('email') email: string): Promise<User> {
-    return this.userService.findByEmail(email);
-  }
-
   @Get(':id')
   async getUserById(@Param('id') id: number): Promise<User> {
     return this.userService.getUserById(id);
+  }
+
+  @Get('search/:email')
+  async findByEmail(@Param('email') email: string): Promise<User> {
+    return this.userService.findByEmail(email);
   }
 
   @Patch(':id')
