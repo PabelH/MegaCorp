@@ -67,4 +67,15 @@ export class UserService {
 
     return 'User deleted successfully';
   }
+
+  // async findByEmail(email: string): Promise<User | undefined> {
+  //   return this.userRepository.findOne({ where: { email } });
+  // }
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
 }

@@ -17,6 +17,11 @@ export class UserController {
     return this.userService.getAllUsers();
   }
 
+  @Get('search/:email')
+  async findByEmail(@Param('email') email: string): Promise<User> {
+    return this.userService.findByEmail(email);
+  }
+
   @Get(':id')
   async getUserById(@Param('id') id: number): Promise<User> {
     return this.userService.getUserById(id);
@@ -32,4 +37,5 @@ export class UserController {
     await this.userService.deleteUser(id);
     return { message: 'User deleted successfully' };
   }
+
   }
