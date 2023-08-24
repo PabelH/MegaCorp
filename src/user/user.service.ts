@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { RegisterDto } from './dto/create-user.dto';
+import * as bcrypt from 'bcrypt'; 
 
 @Injectable()
 export class UserService {
@@ -12,7 +13,7 @@ export class UserService {
   ) {}
 
   async registerUser(registerDto: RegisterDto): Promise<User> {
-    const { email, username } = registerDto;
+    const { email, username, password } = registerDto;
 
     const userWithEmail = await this.userRepository.findOne({ where: { email } });
     if (userWithEmail) {
@@ -24,9 +25,17 @@ export class UserService {
       throw new ConflictException('Username already exists');
     }
 
-    const user = this.userRepository.create(registerDto);
+    
+    const hashedPassword = await bcrypt.hash(password, 10); // Cambia el factor según tus necesidades
+    const user = this.userRepository.create({
+      email,
+      username,
+      password: hashedPassword,
+      isAdmin: registerDto.isAdmin,
+    });
     return this.userRepository.save(user);
   }
+
 
   async getAllUsers(): Promise<User[]> {
     return this.userRepository.find();
@@ -68,9 +77,7 @@ export class UserService {
     return 'User deleted successfully';
   }
 
-  // async findByEmail(email: string): Promise<User | undefined> {
-  //   return this.userRepository.findOne({ where: { email } });
-  // }
+
   async findByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
