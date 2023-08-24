@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Book } from './book.entity';
@@ -14,6 +14,7 @@ export class BookService {
   async getAllBooks(): Promise<Book[]> {
     return this.bookRepository.find();
   }
+
 
   async getBookById(id: number): Promise<Book | undefined> {
     return this.bookRepository.findOne({ where: { id } });
@@ -35,5 +36,22 @@ export class BookService {
       throw new NotFoundException(`Book with ID ${id} not found`);
     }
     await this.bookRepository.delete(id);
+  }
+  async reserveBook(id: number): Promise<Book | undefined> {
+    const book = await this.getBookById(id);
+    if (book.isReserved) {
+      throw new ConflictException('Book is already reserved');
+    }
+    book.isReserved = true;
+    return this.bookRepository.save(book);
+  }
+  
+  async cancelReservation(id: number): Promise<Book | undefined> {
+    const book = await this.getBookById(id);
+    if (!book.isReserved) {
+      throw new ConflictException('Book is not reserved');
+    }
+    book.isReserved = false;
+    return this.bookRepository.save(book);
   }
 }

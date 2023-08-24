@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
-import { UserModule } from '../user/user.module'; // Importa UserModule
+import { UserModule } from '../user/user.module'; 
 import { jwtConstants } from './jwt.constants';
 
 @Module({
@@ -11,7 +11,7 @@ import { jwtConstants } from './jwt.constants';
     UserModule, 
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '24h' },
     }),
   ],
   providers: [AuthService, JwtStrategy],

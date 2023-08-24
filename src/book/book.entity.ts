@@ -35,7 +35,10 @@ export class Book {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Método para calcular la antigüedad del libro
+  @Column({ default: false })
+  isReserved: boolean;
+
+  // book age
   calculateAge(): number {
     const currentYear = new Date().getFullYear();
     return currentYear - this.publishedYear;
