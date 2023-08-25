@@ -11,7 +11,6 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('register')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Crear Usuario' })
   @ApiResponse({ status: 201, description: 'Usuario agregado correctamente.'}) 
   async registerUser(@Body() registerDto: RegisterDto): Promise<User> {
